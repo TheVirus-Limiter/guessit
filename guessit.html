@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="keywords" content="Fun, Utility, Guess, Age, Gender, Nationality, Funny">
+    <meta name="description" content="A website that guesses your age, gender and nationality, just with your name!">
+    <meta name="author" content="Rehan Raj">
+    <link rel="icon" href="logo.jpg">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+
+    <title>GuessIt - Guess your age, gender and nationality just with your name!</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" rel="stylesheet"/>
+    <style>
+
+</style>
+  <style type="text/css">@font-face {
+  font-family: 'rbicon';
+  src: url(chrome-extension://dipiagiiohfljcicegpgffpbnjmgjcnf/fonts/rbicon.woff2) format("woff2");
+  font-weight: normal;
+  font-style: normal; }
+</style></head>
+
+  <body data-new-gr-c-s-check-loaded="14.1091.0" data-gr-ext-installed="" data-new-gr-c-s-loaded="14.1091.0">
+
+    <header>
+      <div class="collapse bg-dark" id="navbarHeader">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-8 col-md-7 py-4">
+             
+            </div>
+            <div class="col-sm-4 offset-md-1 py-4">
+    
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="navbar navbar-dark bg-dark box-shadow">
+        <div class="container d-flex justify-content-between">
+         <a href="#" class="navbar-brand d-flex align-items-center text-center">
+            <strong>guessIt</strong>
+          </a>
+          
+        </div>
+      </div>
+    </header>
+
+    <main role="main">
+
+      <section class="jumbotron text-center" style="background: rgb(125,57,136);
+      background: linear-gradient(90deg, rgba(125,57,136,1) 0%, rgba(93,48,166,1) 26%, rgba(18,146,208,1) 87%);">
+        <div class="container">
+          <h1 class="jumbotron-heading" style="color:aliceblue">I'll guess your age, gender and nationality</h1>
+          <p style="color:aliceblue">Just with your name.</p>
+          <p>
+            <a href="#" class="btn btn-primary my-2" onClick="document.getElementById('form1').scrollIntoView();">Let's start!</a>
+            
+          </p>
+        </div>
+      </section>
+
+
+          <div class="form">
+            
+            
+      <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+
+      <div id="form1" class="form-group">
+  
+          <form id="frm1" target="dummyframe">
+              <p for="topic" class="text-center" style="font-size: x-large;">What's your name?</p>
+              <input size ="2" id="input1" type="text" class="form-control"  placeholder="E.g: George, Peter etc." style="width: 400px; align-items: center; align-self: center; align-content: center; min-width: fit-content; position: absolute;
+              left: 50%;
+              transform: translateX(-50%);"><br><br>
+              <div id="buttons">
+                  <input type="submit" id="startbutton" value="Start!" class="btn btn-lg btn-success button button20"
+                      onclick="getInfo()" style="position: absolute;
+                      left: 50%;
+                      transform: translateX(-50%);">
+              </div>
+          </form><br><br>
+          <br>     
+          <div id="demo1">
+              <p id="age" class="text-xl-center" style="font-size:larger; position: relative;
+              left: 50%;
+              transform: translateX(-50%);"> </p>
+              <p id="gender" class="text-xl-center" style="font-size:larger; position: relative;
+              left: 50%;
+              transform: translateX(-50%);"> </p>
+              <p id="nationality" class="text-xl-center" style="font-size:larger; position: relative;
+              left: 50%;
+              transform: translateX(-50%);"> </p>
+          </div>
+      </div>
+      <img id="flag" src="whiteBG.jpg" height=256 width=256 style="position: relative;
+      left: 50%;
+      transform: translateX(-50%);"/>
+      <script>
+        //height=350 width=500
+          var xmlhttp = new XMLHttpRequest();
+          var url = "iso.json";
+          function getInfo() {
+              var x = document.getElementById("frm1");
+              var text = "";
+              var i;
+              for (i = 0; i < 1; i++) {
+                  text += x.elements[i].value;
+              }
+
+              if(text==""||text==" "){
+                document.getElementById("age").innerHTML = "Please enter your name"
+              }
+              else{
+  
+              fetch('https://api.agify.io?name=' + text.toString())
+                  .then((response) => response.json())
+                  .then((data) => {
+                    if(data==null){
+                        document.getElementById("age").innerHTML = "I don't have data for that name yet"
+                    }else{
+                      //     console.log(data)
+                      var age = data.age.toString()
+                      document.getElementById("age").innerHTML = "I think your age is: " + age.bold()
+                    
+                    }
+                  });
+              fetch('https://api.genderize.io?name=' + text.toString())
+                  .then((response) => response.json())
+                  .then((data) => {
+                    if(data==null){
+                        document.getElementById("gender").innerHTML = " "
+                    }else{
+                      //           console.log(data)
+                      document.getElementById("gender").innerHTML = "I think your gender is: " + data.gender[0].toUpperCase().bold() + data.gender.substring(1).bold()
+                    }
+                  });
+              fetch('https://api.nationalize.io?name=' + text.toString())
+                  .then((response) => response.json())
+                  .then((data) => {
+                    if(data==null){
+                        document.getElementById("nationality").innerHTML = " "
+                    }else{
+                      let country_code = data.country[0].country_id
+                      document.getElementById("flag").src="https://flagsapi.com/"+country_code+"/shiny/64.png";
+                     // console.log(country_code)
+                      xmlhttp.onreadystatechange = function () {
+                          if (this.readyState == 4 && this.status == 200) {
+                              var myArr = JSON.parse(this.responseText);
+                              var countryName = eval("myArr."+country_code)
+                              document.getElementById("nationality").innerHTML = "I think you're from: " + countryName.bold()
+                          }
+                      };
+                      xmlhttp.open("GET", url, true);
+                      xmlhttp.send();
+                    }
+                  });
+                }
+          }
+      </script>
+  
+            
+
+            
+            
+            
+
+            
+            
+            
+          </div>
+        </div>
+        
+ 
+
+    </main>
+<br>
+<br>
+<br>
+    <footer class="text-muted" style="background: rgb(125,57,136);
+    background: linear-gradient(90deg, rgba(125,57,136,1) 0%, rgba(93,48,166,1) 26%, rgba(18,146,208,1) 87%);">
+     
+        <center><p style="color:aliceblue">© 2023 Rehan Raj. Album example by Bootstrap</p></center>
+     <br>
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="../../js/vendor/popper.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/holderjs@2.9.4/holder.js"></script>
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    
+
+
+<svg xmlns="http://www.w3.org/2000/svg" width="348" height="225" viewBox="0 0 348 225" preserveAspectRatio="none" style="display: none; visibility: hidden; position: absolute; top: -100%; left: -100%;"><defs><style type="text/css"></style></defs><text x="0" y="17" style="font-weight:bold;font-size:17pt;font-family:Arial, Helvetica, Open Sans, sans-serif">Thumbnail</text></svg><div id="rememberry__extension__root" style="all: unset;"></div></body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>
+</html>
