@@ -23,7 +23,12 @@
   src: url(chrome-extension://dipiagiiohfljcicegpgffpbnjmgjcnf/fonts/rbicon.woff2) format("woff2");
   font-weight: normal;
   font-style: normal; }
-</style></head>
+  html {
+  scroll-behavior: smooth;
+}
+</style>
+
+</head>
 
   <body data-new-gr-c-s-check-loaded="14.1091.0" data-gr-ext-installed="" data-new-gr-c-s-loaded="14.1091.0">
 
@@ -101,6 +106,9 @@
       <img id="flag" src="whiteBG.jpg" height=256 width=256 style="position: relative;
       left: 50%;
       transform: translateX(-50%);"/>
+      <p id="info" class="text-center" style="font-size:small; position: relative;
+      left: 50%;
+      transform: translateX(-50%);"> </p>
       <script>
         //height=350 width=500
           var xmlhttp = new XMLHttpRequest();
@@ -121,39 +129,48 @@
               fetch('https://api.agify.io?name=' + text.toString())
                   .then((response) => response.json())
                   .then((data) => {
-                    if(data==null){
+                    if(data.age==null || data.count==0){
                         document.getElementById("age").innerHTML = "I don't have data for that name yet"
                     }else{
-                      //     console.log(data)
+                        //   console.log(data)
                       var age = data.age.toString()
+                      var count = data.count.toString()
                       document.getElementById("age").innerHTML = "I think your age is: " + age.bold()
+                      document.getElementById("info").innerHTML = count.italics() + " people share your name in the database"
                     
                     }
                   });
               fetch('https://api.genderize.io?name=' + text.toString())
                   .then((response) => response.json())
                   .then((data) => {
-                    if(data==null){
+                    if(data.gender==null || data.count==0){
                         document.getElementById("gender").innerHTML = " "
                     }else{
-                      //           console.log(data)
+               //                  console.log(data)
                       document.getElementById("gender").innerHTML = "I think your gender is: " + data.gender[0].toUpperCase().bold() + data.gender.substring(1).bold()
                     }
                   });
               fetch('https://api.nationalize.io?name=' + text.toString())
                   .then((response) => response.json())
                   .then((data) => {
-                    if(data==null){
+                    document.getElementById("flag").src="https://thevirus-limiter.github.io/guessit/whiteBG.jpg"
+                    // console.log(data)
+                    //console.log(data.country[0].country_id)
+                    if(data.country.length==0){
                         document.getElementById("nationality").innerHTML = " "
                     }else{
                       let country_code = data.country[0].country_id
+                      let probability = data.country[0].probability * 100
+                      let probability1 = probability/100
+                      let probability2 = probability.toString()
+                  
                       document.getElementById("flag").src="https://flagsapi.com/"+country_code+"/shiny/64.png";
-                     // console.log(country_code)
+                    
                       xmlhttp.onreadystatechange = function () {
                           if (this.readyState == 4 && this.status == 200) {
                               var myArr = JSON.parse(this.responseText);
                               var countryName = eval("myArr."+country_code)
-                              document.getElementById("nationality").innerHTML = "I think you're from: " + countryName.bold()
+                              document.getElementById("nationality").innerHTML = "I think you're from: " + countryName.bold() + " with a probability of " +probability2.bold()+"%".bold()
                           }
                       };
                       xmlhttp.open("GET", url, true);
